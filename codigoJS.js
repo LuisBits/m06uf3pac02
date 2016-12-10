@@ -49,6 +49,7 @@ var Funciones = {
         console.log("Conexión a BBDD correcta");
         // Si nos encontramos en la página de listar o modificar, mostramos la tabla o fila.
         if (window.location.pathname == '/html/listaCentros.html' || window.location.pathname == '/html/modificarCentros.html') {
+             console.log(window.location.pathname);
             Funciones.listarCentros();
         }
         if (window.location.pathname == '/html/actualizarCentros.html') {
