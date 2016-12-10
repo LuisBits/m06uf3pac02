@@ -49,10 +49,10 @@ var Funciones = {
         console.log("Conexión a BBDD correcta");
         console.log(window.location.pathname);
         // Si nos encontramos en la página de listar o modificar, mostramos la tabla o fila.
-        if (window.location.pathname == '/html/listaCentros.html' || window.location.pathname == '/html/modificarCentros.html') {
+        if (window.location.pathname == '/m06uf3pac02/html/listaCentros.html' || window.location.pathname == '/m06uf3pac02/html/modificarCentros.html') {
             Funciones.listarCentros();
         }
-        if (window.location.pathname == '/html/actualizarCentros.html') {
+        if (window.location.pathname == '/m06uf3pac02/html/actualizarCentros.html') {
             var id = (window.location.search.substr(1)).toString();
             Funciones.mostrarFila(id);
         }
