@@ -47,7 +47,6 @@ var Funciones = {
     // Si la conexión es correcta, muestro mensaje y ejecuto listado, según la página en que se encuentre.
     onsuccess: function (evento) {
         console.log("Conexión a BBDD correcta");
-        console.log(window.location.pathname);
         // Si nos encontramos en la página de listar o modificar, mostramos la tabla o fila.
         if (window.location.pathname == '/m06uf3pac02/html/listaCentros.html' || window.location.pathname == '/m06uf3pac02/html/modificarCentros.html') {
             Funciones.listarCentros();
@@ -128,11 +127,7 @@ var Funciones = {
             asignatura: document.getElementById("asignatura").value,
             curso: document.getElementById("curso").value,
             fecha: fechaOK
-        });
-        // En caso de error, muestro mensaje.
-        solicitud.onerror = function (evento) {
-            console.log(solicitud.error.name + '\n\n' + solicitud.error.message);
-        };
+        });        
         // Si todo es correcto, reseteo valores y mostramos mensaje.
         solicitud.onsuccess = function (evento) {
             document.getElementById("asignatura").value = '';
@@ -144,13 +139,8 @@ var Funciones = {
 
     eliminarCentro: function (id) {
         this.baseDatos = this.conexion.result;
-        // Realizaremos la petición en una transacción, y eliminamos.
-        var datos = this.baseDatos.transaction('centros', 'readwrite').objectStore('centros').delete(id);
-
-        // En caso de error, muestro mensaje.
-        datos.onerror = function (evento) {
-            console.log(datos.error.name + '\n\n' + datos.error.message);
-        };
+        // Eliminamos el centro con id pasado.
+        var datos = this.baseDatos.transaction('centros', 'readwrite').objectStore('centros').delete(id);        
         // Si todo es correcto, mostramos mensaje y listo de nuevo.       
         datos.onsuccess = function (evento) {
             alert('Centro eliminado.');
@@ -162,18 +152,11 @@ var Funciones = {
         this.baseDatos = this.conexion.result;
         // Realizaremos la petición en una transacción, con permisos de escritura.
         var tabla = this.baseDatos.transaction('centros', 'readwrite').objectStore('centros');
+        // Seleccionamos la fila con el id indicado.
         var fila = tabla.get(parseInt(id));
-
-        fila.onerror = function (evento) {
-            console.log(fila.error.name + '\n\n' + fila.error.message);
-        };
-
         fila.onsuccess = function (evento) {
             // Cogemos los datos guardados.
             var datos = fila.result;
-
-
-
             var asignatura = document.getElementById("asignatura").value;
             var curso = document.getElementById("curso").value;
             // Capturo la fecha y cambio el formato (de yyyy-mm-dd a dd-mm-yyyy).
@@ -189,10 +172,8 @@ var Funciones = {
             if (fecha != '') {
                 datos.fecha = fechaOK;
             }
-
             // Ingresamos valores en la tabla.
             var actualizar = tabla.put(datos);
-
             // En caso de error, muestro mensaje.
             actualizar.onerror = function (event) {
                 console.log(datos.error.name + '\n\n' + datos.error.message);
@@ -200,7 +181,6 @@ var Funciones = {
             // Si todo es correcto, reseteo valores y mostramos mensaje.
             actualizar.onsuccess = function (event) {
                 alert('Centro actualizado.');
-
             };
         };
     },

@@ -78,6 +78,10 @@ nav a:hover, button:hover, main a:hover {
     
 }
 
+.extra {
+    background-color: rgba(157, 53, 69, 0.16);
+}
+
 .contenedor {
     border: 4px #9d3545 solid ;
     border-radius: 10px;    
