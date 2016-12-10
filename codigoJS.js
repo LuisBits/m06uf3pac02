@@ -1,12 +1,14 @@
 // He decidido utilizar este método (IndexedDB) ya que es el que actualmente recomienda HTML5.
 // Además he optado por usar un modelo de POO para llevarlo a cabo.
 var Funciones = {
+    // Estas 2 propiedades se usarán en todas las funciones para la conexión a la BBDD.
     conexion: null,
     baseDatos: null,
 
     iniciar: function () {
         // Creo una BBDD mediante IndexedDB, compatible con los principales navegadores.
         var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+        // Creo la BBDD 'Colegio', en la versión 1.
         this.conexion = indexedDB.open('Colegio', 1);
         // Capturo los eventos de BBDD preexistentes, confirmaciones y errores sobre la conexión.
         this.conexion.addEventListener(
@@ -25,12 +27,12 @@ var Funciones = {
     // Compruebo si la BBDD existe.
     onupgradeneeded: function (evento) {
         this.baseDatos = this.conexion.result;
-        // Si la tabla no está creada, la creamos.
+        // Si la tabla no está creada, la creamos. Primero el keyPath, sería como la Primary Key.
         var tabla = this.baseDatos.createObjectStore('centros', {
             keyPath: 'id',
             autoIncrement: true
         });
-
+        // Y los demás campos se crean tipo índice, por si luego se quiere usar para filtrar y/o que sean campos únicos.
         tabla.createIndex('asignatura', 'asignatura', {
             unique: false
         });
@@ -42,27 +44,25 @@ var Funciones = {
         });
 
     },
-    // Si la conexión es correcta, muestro mensaje y ejecuto listado, según la página.
+    // Si la conexión es correcta, muestro mensaje y ejecuto listado, según la página en que se encuentre.
     onsuccess: function (evento) {
         console.log("Conexión a BBDD correcta");
-        var id = (window.location.search.substr(1)).toString();
-        // Si nos encontramos en la página de listar o modificar, mostramos la tabla.
+        // Si nos encontramos en la página de listar o modificar, mostramos la tabla o fila.
         if (window.location.pathname == '/html/listaCentros.html' || window.location.pathname == '/html/modificarCentros.html') {
             Funciones.listarCentros();
         }
         if (window.location.pathname == '/html/actualizarCentros.html') {
+            var id = (window.location.search.substr(1)).toString();
             Funciones.mostrarFila(id);
         }
-
     },
-
+    // Si hay algún error en la conexión, lo mostramos.
     onerror: function (evento) {
         console.log("Error en BBDD: " + evento.target.errorCode);
     },
 
     listarCentros: function () {
         this.baseDatos = this.conexion.result;
-
         // Realizaremos la petición en una transacción, con permisos de lectura.
         var datos = this.baseDatos.transaction('centros', 'readonly');
         var tabla = datos.objectStore('centros');
@@ -71,7 +71,7 @@ var Funciones = {
         // Recorremos la tabla con 'openCursor'
         tabla.openCursor().onsuccess = function (evento) {
             var resultado = evento.target.result;
-            // Si la tabla está vacía devolvemos null.
+            // Si la tabla está vacía mostramos mensaje.
             if (resultado === null) {
                 document.getElementById("listaCentros").innerHTML =
                     '<tr>\
