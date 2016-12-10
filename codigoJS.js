@@ -97,7 +97,7 @@ var Funciones = {
                             <td>' + tablaCentros[fila].curso + '</td>\n\
                             <td>' + tablaCentros[fila].fecha + '</td>\n';
                     // En la página de Modificar incluyo botones para actualizar o eliminar.
-                    if (window.location.pathname == '/html/modificarCentros.html') {
+                    if (window.location.pathname == '/m06uf3pac02/html/modificarCentros.html') {
                         HTML += '<td>\n\
                                 <a href="actualizarCentros.html?' + tablaCentros[fila].id + '">Modificar</a>\n\
                             </td>\n\
